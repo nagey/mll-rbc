@@ -26,7 +26,7 @@ var getSectionId = function (element) {
   return getSectionId(element.parent());
 }
 
-var siteUrl = encode("http://wherewasbill.com");
+var siteUrl = encode("http://realbillcassidy.com");
 
 
 // jQuery to collapse the navbar on scroll
