@@ -148,7 +148,6 @@ $(document).ready(function () {
       }, 1500, 'easeInOutExpo');
       var target = $(panels[panelCursor]).attr("id");
       gaTrack("scrolling", "auto", target, {"nonInteraction": 1});
-      timeoutHandle = setTimeout(scrollNext, panelTimeout);
     }
   }
   var windowWidth = window.screen.width < window.outerWidth ?
