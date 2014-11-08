@@ -235,16 +235,30 @@ $(document).ready(function () {
     var h = $(window).height() - 70;
     var w = $(window).width();
     var videoRatio = 390/640;
+    var videoScale = 0.85;
     if ((w*videoRatio) > h) {
-      videoWidth = h / videoRatio;
-      videoHeight = h;
+      videoWidth = h / videoRatio * videoScale;
+      videoHeight = h * videoScale;
     }
     else {
-      videoWidth = w;
-      videoHeight = w * videoRatio;
+      videoWidth = w * videoScale;
+      videoHeight = w * videoRatio * videoScale;
     }
     $(".fullscreen-ad .container").css("padding-left", ((w-videoWidth)/2));
+    $(".fullscreen-ad .container").css("padding-top", ((h-videoHeight)/2) - 20);
+    $(".video-links").css("width", videoWidth);
   }
+  
+  $("a.yt-link").click(function (event) {
+    event.preventDefault();
+    var videoId = $(this).attr("data-ytid");
+    ytPlayer.loadVideoById(videoId);
+    //ytPlayer.playVideo();
+    $('html, body').stop().animate({
+        scrollTop: 0
+    }, 1500, 'easeInOutExpo');
+    
+  });
   
   sizeVideo();
   loadVideo();
