@@ -232,8 +232,8 @@ $(document).ready(function () {
   }
   
   var sizeVideo = function () {
-    var h = $(window).height() - 70;
-    var w = $(window).width();
+    var h = $(window).innerHeight() - 70;
+    var w = $(window).innerWidth();
     var videoRatio = 390/640;
     var videoScale = 0.85;
     if ((w*videoRatio) > h) {
