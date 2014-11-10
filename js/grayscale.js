@@ -19,8 +19,8 @@ var gaTrack = function (category, action, label, value) {
   if ((typeof ga) === "function") {
     if (!trackerInit) {
       // create tracking id for onpage stuff…
-      ga("create",ga.getAll()[0].a.data.B[":trackingId"]);
-      ga("require", "linker");
+      //ga("create",ga.getAll()[0].a.data.B[":trackingId"]);
+      //ga("require", "linker");
       trackerInit = true;
     }
     
@@ -249,14 +249,14 @@ $(document).ready(function () {
     
     onStateChange = function (event) {
       if (event.data == YT.PlayerState.ENDED) {
-        ga("video", "completed", videoId);
+        gaTrack("video", "completed", videoId);
         scrollNext();
       }
       else if (event.data == YT.PlayerState.PAUSED) {
-        ga("video", "paused", videoId, ytPlayer.getCurrentTime());
+        gaTrack("video", "paused", videoId, ytPlayer.getCurrentTime());
       }
       else if (event.data == YT.PlayerState.PLAYING) {
-        ga("video", "play", videoId, ytPlayer.getCurrentTime());
+        gaTrack("video", "play", videoId, ytPlayer.getCurrentTime());
       }
     }
   }
