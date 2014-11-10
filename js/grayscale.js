@@ -19,8 +19,8 @@ var gaTrack = function (category, action, label, value) {
   if ((typeof ga) === "function") {
     if (!trackerInit) {
       // create tracking id for onpage stuff…
-      //ga("create",ga.getAll()[0].a.data.B[":trackingId"]);
-      //ga("require", "linker");
+      ga("create",ga.getAll()[0].a.data.B[":trackingId"]);
+      ga("require", "linker");
       trackerInit = true;
     }
     
