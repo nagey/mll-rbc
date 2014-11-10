@@ -7,6 +7,7 @@
 
 var onYouTubePlayerAPIReady, ytPlayer, onStateChange, scrollNext;
 
+var videoId = 'hzusZhB9Uyw';
 
 var encode = function (str) {
   return encodeURIComponent(str).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
@@ -158,14 +159,27 @@ $(document).ready(function () {
   }
 
   $("a.tweetit").each(function (e) {
-    var href= encode($(this).attr("href").substr(1));
-    var tweet = encode($(this).attr("data-tweet"));
-    $(this).attr("href","https://twitter.com/intent/tweet?via=wherewasbill&related=marylandrieu,wherewasbill,senlandrieu&text="+tweet+"&url="+siteUrl+href);
+    var href= $(this).attr("href");
+    if ((href.substr(0,7) === "http://") || (href.substr(0,8) === "https://")) {
+      href = encode(href);
+    }
+    else {
+      href = encode(siteUrl + href.substr(1));      
+    }
+    
+    var tweet = encode($(this).attr("data-tweet"));    
+    $(this).attr("href","https://twitter.com/intent/tweet?via=wherewasbill&related=marylandrieu,wherewasbill,senlandrieu&text="+tweet+"&url="+href);
   });
 
   $("a.fbit").each(function (e) {
-    var href= encode($(this).attr("href").substr(1));
-    $(this).attr("href","https://www.facebook.com/sharer/sharer.php?u="+siteUrl+href);
+    var href= $(this).attr("href");
+    if ((href.substr(0,7) === "http://") || (href.substr(0,8) === "https://")) {
+      href = encode(href);
+    }
+    else {
+      href = encode(siteUrl + href.substr(1));      
+    }
+    $(this).attr("href","https://www.facebook.com/sharer/sharer.php?u="+href);
   });
 
   $("a.popup").each( function (e) {
@@ -205,7 +219,6 @@ $(document).ready(function () {
     if ($("#ytplayer") == null) {
       return false;
     }
-    var videoId = 'hzusZhB9Uyw';
     // Load the IFrame Player API code asynchronously.
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/player_api";
@@ -226,25 +239,48 @@ $(document).ready(function () {
     
     onStateChange = function (event) {
       if (event.data == YT.PlayerState.ENDED) {
+        ga("video", "completed", videoId);
         scrollNext();
+      }
+      else if (event.data == YT.PlayerState.PAUSED) {
+        ga("video", "paused", videoId, ytPlayer.getCurrentTime());
+      }
+      else if (event.data == YT.PlayerState.PLAYING) {
+        ga("video", "play", videoId, ytPlayer.getCurrentTime());
       }
     }
   }
   
   var sizeVideo = function () {
-    var h = $(window).height() - 70;
-    var w = $(window).width();
+    var h = $(window).innerHeight() - 70;
+    var w = $(window).innerWidth();
     var videoRatio = 390/640;
+    var videoScale = 0.85;
     if ((w*videoRatio) > h) {
-      videoWidth = h / videoRatio;
-      videoHeight = h;
+      videoWidth = h / videoRatio * videoScale;
+      videoHeight = h * videoScale;
     }
     else {
-      videoWidth = w;
-      videoHeight = w * videoRatio;
+      videoWidth = w * videoScale;
+      videoHeight = w * videoRatio * videoScale;
     }
     $(".fullscreen-ad .container").css("padding-left", ((w-videoWidth)/2));
+    $(".fullscreen-ad .container").css("padding-top", ((h-videoHeight)/2) - 20);
+    $(".video-links").css("width", videoWidth);
   }
+  
+  $("a.yt-link").click(function (event) {
+    event.preventDefault();
+    videoId = $(this).attr("data-ytid");
+    ytPlayer.loadVideoById(videoId);
+    
+    gaTrack("video", "switch", videoId);
+
+    $('html, body').stop().animate({
+        scrollTop: 0
+    }, 1500, 'easeInOutExpo');
+    
+  });
   
   sizeVideo();
   loadVideo();
