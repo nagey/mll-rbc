@@ -92,6 +92,9 @@ function init() {
 }
 
 $(document).ready(function () {
+  
+  // create tracking id for onpage stuff…
+  ga("create",ga.getAll()[0].a.data.B[":trackingId"]);
 
   var isMobile = $(".navbar-nav>li>a").attr("padding-top") === "10px"
   
